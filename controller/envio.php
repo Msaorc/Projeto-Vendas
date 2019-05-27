@@ -4,7 +4,7 @@ use PHPMailer\PHPMailer\Exception;
 
 $vendas = new Venda();
 $vendas->GetVendas();
-
+// funtion formatar data
 function formatarData($data){
 $array = explode("-", $data);
 return $array[2]."/".$array[1]."/".$array[0];
@@ -24,6 +24,8 @@ $comment = "<table border='1'>
                     </tr>
          <tbody>";
 
+$valor_venda = 0.0;
+$valor_comissao = 0.0;
 foreach ($vendas->GetItens() as $vendasVendedor){
 $comment .= "       <tr>
                         <td>".$vendasVendedor['id']."</td>
@@ -35,12 +37,17 @@ $comment .= "       <tr>
                         </td>
                     </tr>  
                 </tbody>";
+$valor_venda += $vendasVendedor['valor_venda'];
+$valor_comissao += $vendasVendedor['comissao'];
 
 $email_vendedor = $vendasVendedor['email'];
 $nome_vendedor = $vendasVendedor['nome'];
 };
 
-$comment .= " </table> ";
+$comment .= " </table> "
+        . "<br> <br>"
+        . " Valor Total : " . $valor_venda . " <br>"
+        . " Valor Total Comissao: " . $valor_comissao ;
     
 $name = $nome_vendedor;
 $emailAddr = $email_vendedor;
@@ -78,7 +85,6 @@ if(!$mail->Send()) {
     Rotas::Redirecionar(1, Rotas::get_SiteHome());
 }
 }
-
 ?>
 
 
